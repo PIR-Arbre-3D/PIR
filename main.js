@@ -18,101 +18,152 @@ scene.add(ambientLight);
 
 const tree = new EZTree.Tree();
 
-let modele = {
-  "seed": 35729,
-  "type": "deciduous",
-  "bark": {
-    "type": "oak",
-    "tint": 16774097,
-    "flatShading": false,
-    "textured": true,
-    "textureScale": {
-      "x": 1,
-      "y": 10
-    }
-  },
-  "branch": {
-    "levels": 3,
-    "angle": {
-      "1": 54,
-      "2": 58,
-      "3": 32
-    },
-    "children": {
-      "0": 6,
-      "1": 4,
-      "2": 3
-    },
-    "force": {
-      "direction": {
-        "x": 0,
-        "y": 1,
-        "z": 0
-      },
-      "strength": -0.01
-    },
-    "gnarliness": {
-      "0": 0,
-      "1": -0.1,
-      "2": -0.15,
-      "3": 0.09
-    },
-    "length": {
-      "0": 37.24,
-      "1": 11.08,
-      "2": 12.39,
-      "3": 7.16
-    },
-    "radius": {
-      "0": 1.41,
-      "1": 0.9,
-      "2": 0.69,
-      "3": 1.19
-    },
-    "sections": {
-      "0": 8,
-      "1": 6,
-      "2": 3,
-      "3": 1
-    },
-    "segments": {
-      "0": 7,
-      "1": 5,
-      "2": 3,
-      "3": 3
-    },
-    "start": {
-      "1": 0.49,
-      "2": 0.06,
-      "3": 0.12
-    },
-    "taper": {
-      "0": 0.73,
-      "1": 0.42,
-      "2": 0.69,
-      "3": 0.75
-    },
-    "twist": {
-      "0": -0.23,
-      "1": 0.42,
-      "2": 0,
-      "3": 0
-    }
-  },
-  "leaves": {
-    "type": "oak",
-    "billboard": "double",
-    "angle": 42,
-    "count": 18,
-    "start": 0.16,
-    "size": 2.5,
-    "sizeVariance": 0.7,
-    "tint": 14013901,
-    "alphaTest": 0.5
-  }
-}
-;
+function generationJSON() {
+  let _level = Math.floor(Math.random()*2) + 2;
+  let _prop_length0 = Math.random()
+  let _length0 = _prop_length0*(65 - 35) + 35;
+  let _length1 = Math.random()*(30 - 15) + 15;
+  let _length2 = Math.random()*(10 - 5) + 5;
+  let _length3 = Math.random()*(10 - 4) + 4;
+  let _children0 = Math.random()*10 + 4 + 6*_prop_length0;
+  let _children1 = Math.random()*(7 - 2) + 2;
+  let _children2 = Math.random()*(5 - 0) + 0;
+  let _radius0 = Math.random()*1.7 + 0.8 + 1.2*_prop_length0;
+  let _radius1 = 0.63;
+  let _radius2 = 0.76;
+  let _radius3 = 0.7;
+  let _gnarliness0 = Math.random()*(0.08 + 0.08) - 0.08;
+  let _gnarliness1 = Math.random() * (0.5 - 0.2) * (Math.floor(Math.random()*2)*2 - 1);    ///pour les debiles de MP c'est 1 ou -1 ie Tom
+  let _gnarliness2 = Math.random() * (0.5 - 0.15) * (Math.floor(Math.random()*2)*2 - 1);
+  let _gnarliness3 = Math.random() * (0.5 - 0.05) * (Math.floor(Math.random()*2)*2 - 1);
+  let _forceX = Math.random()*2 - 1;
+  let _forceY = Math.random()*2 - 1;
+  let _forceZ = Math.random()*2 - 1;
+  let _strength = Math.random()*0.11 -0.08;
+  let _section0 = 12;
+  let _section1 = 8;
+  let _section2 = 6;
+  let _section3 = 4;
+  let _segment0 = 12;
+  let _segment1 = 6;
+  let _segment2 = 4;
+  let _segment3 = 3;
+  let _start1 = Math.random()*(0.5 - 0.2) + 0.2;
+  let _start2 = Math.random()*(0.5 - 0.2) + 0.2;
+  let _start3 = Math.random()*(0.5 - 0.2) + 0.2;
+  let _taper0 = Math.random()*(0.75 - 0.5) + 0.5;
+  let _taper1 = Math.random()*(0.75 - 0.5) + 0.5;
+  let _taper2 = Math.random()*(0.75 - 0.5) + 0.5;
+  let _taper3 = Math.random()*(0.75 - 0);
+  let _twist0 = Math.random()*(0.2 + 0.2) - 0.2;
+  let _twist1 = Math.random()*(0.75 + 0.2) - 0.2;
+  let _twist2 = Math.random()*(0.75 + 0.2) - 0.2;
+  let _twist3 = Math.random()*(0.75 + 0.2) - 0.2;
+  let _angle1 = Math.random()*(65 - 40) + 40;
+  let _angle2 = Math.random()*(50 - 35) + 35;
+  let _angle3 = Math.random()*(65 - 35) + 35;
 
+
+
+
+
+
+
+  let modele = {
+    "seed": 36330,
+    "type": "deciduous",
+    "bark": {
+      "type": "oak",
+      "tint": 13552830,
+      "flatShading": false,
+      "textured": true,
+      "textureScale": {
+        "x": 0.5,
+        "y": 5
+      }
+    },
+    "branch": {
+      "levels": _level,   ///entre 0 et 3 inclus
+      "angle": {
+        "1": _angle1,
+        "2": _angle2,
+        "3": _angle3
+      },
+      "children": { ///de 0 à 100 correspond au nombre d'enfants par generation 0, 1 ou 2
+        "0": _children0,
+        "1": _children1,
+        "2": _children2
+      },
+      "force": {
+        "direction": {  ///direction d'attraction   de -1 à 1
+          "x": _forceX,
+          "y": _forceY,
+          "z": _forceZ
+        },
+        "strength": _strength  /// force d'attraction de -0.1 à 0.1
+      },
+      "gnarliness": {
+        "0": _gnarliness0,
+        "1": _gnarliness1,
+        "2": _gnarliness2,
+        "3": _gnarliness3
+      },
+      "length": {
+        "0": _length0,
+        "1": _length1,   
+        "2": _length2,
+        "3": _length3
+      },
+      "radius": {
+        "0": _radius0,
+        "1": _radius1,
+        "2": _radius2,
+        "3": _radius3
+      },
+      "sections": {
+        "0": _section0,
+        "1": _section1,
+        "2": _section2,
+        "3": _section3
+      },
+      "segments": {
+        "0": _segment0,
+        "1": _segment1,
+        "2": _segment2,
+        "3": _segment3
+      },
+      "start": {
+        "1": _start1,
+        "2": _start2,
+        "3": _start3
+      },
+      "taper": {
+        "0": _taper0,
+        "1": _taper1,
+        "2": _taper2,
+        "3": _taper3
+      },
+      "twist": {
+        "0": _twist0,
+        "1": _twist1,
+        "2": _twist2,
+        "3": _twist3
+      }
+    },
+    "leaves": {
+      "type": "ash",
+      "billboard": "double",
+      "angle": 55,
+      "count": 16,
+      "start": 0,
+      "size": 3,
+      "sizeVariance": 0.72,
+      "tint": 16777215,
+      "alphaTest": 0.5
+    }
+  };
+  return modele
+};
 loadingManager.onLoad = function () {
     console.log('textures chargées');
     creationArbres(3);
@@ -120,10 +171,11 @@ loadingManager.onLoad = function () {
 
 function creationArbres (nb) {
     for (let index = 0; index < nb; index++) {
-        tree.loadFromJson(modele);
+        let arbre = generationJSON();
+        tree.loadFromJson(arbre);
         tree.generate();
         scene.add(tree);
-        exporterArbre(tree, index, modele); 
+        exporterArbre(tree, index, arbre); 
         console.log('[' + '|'.repeat(Math.floor((index+1)/nb*100)) + ' '.repeat(100 - Math.floor((index+1)/nb*100)) + ']  ' + (index+1) + '/' + nb);
     }
 };
@@ -182,4 +234,5 @@ function exporterArbre (arbre, i, json) {
     linkPNG.download = date + 'tree_' + i +'.png';
     linkPNG.click();
 }
+
 
