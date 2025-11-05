@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargement du modèle GLB</title>
+    <link rel="stylesheet" href="position.css">
+</head>
+<body>
+
+    <div id="infos">
+        <h2>Informations sur le modèle</h2>
+        <p id="model-name">Chargement du modèle...</p>
+        <p id="center">Centre: N/A</p>
+        <p id="barycenter">Barycentre: N/A</p>
+    </div>
+    
+    <!-- Conteneur pour afficher le modèle 3D -->
+    <div id="model-container"></div>
+    <button id="export-button" style="position: absolute; top: 10px; left: 10px;">Exporter GLB</button>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="position.js"></script>
+</body>
+</html>

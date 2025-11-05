@@ -166,7 +166,7 @@ function generationJSON() {
 };
 loadingManager.onLoad = function () {
     console.log('textures chargées');
-    creationArbres(3);
+    creationArbres(1);
 };
 
 function creationArbres (nb) {
