@@ -156,7 +156,7 @@ function generationJSON() {
       "angle": 55,
       "count": 16,
       "start": 0,
-      "size": 3,
+      "size": 1,
       "sizeVariance": 0.72,
       "tint": 16777215,
       "alphaTest": 0.5
@@ -166,7 +166,7 @@ function generationJSON() {
 };
 loadingManager.onLoad = function () {
     console.log('textures chargées');
-    creationArbres(3);
+    creationArbres(1);
 };
 
 function creationArbres (nb) {
