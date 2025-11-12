@@ -1,14 +1,15 @@
 import * as THREE from 'three';
 import * as EZTree from '@dgreenheck/ez-tree';
-import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
-const exporter = new GLTFExporter();
+import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
+const exporter = new PLYExporter();
+
 // import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
 // const exporterOBJ = new OBJExporter();
 
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, 1920 / 1080, 0.1, 1000);
-camera.position.z = 100; 
+camera.position.z = 100;
 camera.position.y = 60;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(1920, 1080);
@@ -18,27 +19,27 @@ scene.add(ambientLight);
 const tree = new EZTree.Tree();
 
 function generationJSON() {
-  let _level = Math.floor(Math.random()*2) + 2;
+  let _level = Math.floor(Math.random() * 2) + 2;
   let _prop_length0 = Math.random()
-  let _length0 = _prop_length0*(65 - 35) + 35;
-  let _length1 = Math.random()*(30 - 15) + 15;
-  let _length2 = Math.random()*(10 - 5) + 5;
-  let _length3 = Math.random()*(10 - 4) + 4;
-  let _children0 = Math.random()*10 + 4 + 6*_prop_length0;
-  let _children1 = Math.random()*(7 - 2) + 2;
-  let _children2 = Math.random()*(5 - 0) + 0;
-  let _radius0 = Math.random()*1.7 + 0.8 + 1.2*_prop_length0;
+  let _length0 = _prop_length0 * (65 - 35) + 35;
+  let _length1 = Math.random() * (30 - 15) + 15;
+  let _length2 = Math.random() * (10 - 5) + 5;
+  let _length3 = Math.random() * (10 - 4) + 4;
+  let _children0 = Math.random() * 10 + 4 + 6 * _prop_length0;
+  let _children1 = Math.random() * (7 - 2) + 2;
+  let _children2 = Math.random() * (5 - 0) + 0;
+  let _radius0 = Math.random() * 1.7 + 0.8 + 1.2 * _prop_length0;
   let _radius1 = 0.63;
   let _radius2 = 0.76;
   let _radius3 = 0.7;
-  let _gnarliness0 = Math.random()*(0.08 + 0.08) - 0.08;
-  let _gnarliness1 = Math.random() * (0.5 - 0.2) * (Math.floor(Math.random()*2)*2 - 1);    ///pour les debiles de MP c'est 1 ou -1 ie Tom
-  let _gnarliness2 = Math.random() * (0.5 - 0.15) * (Math.floor(Math.random()*2)*2 - 1);
-  let _gnarliness3 = Math.random() * (0.5 - 0.05) * (Math.floor(Math.random()*2)*2 - 1);
-  let _forceX = Math.random()*2 - 1;
-  let _forceY = Math.random()*2 - 1;
-  let _forceZ = Math.random()*2 - 1;
-  let _strength = Math.random()*0.11 -0.08;
+  let _gnarliness0 = Math.random() * (0.08 + 0.08) - 0.08;
+  let _gnarliness1 = Math.random() * (0.5 - 0.2) * (Math.floor(Math.random() * 2) * 2 - 1);    ///pour les debiles de MP c'est 1 ou -1 ie Tom
+  let _gnarliness2 = Math.random() * (0.5 - 0.15) * (Math.floor(Math.random() * 2) * 2 - 1);
+  let _gnarliness3 = Math.random() * (0.5 - 0.05) * (Math.floor(Math.random() * 2) * 2 - 1);
+  let _forceX = Math.random() * 2 - 1;
+  let _forceY = Math.random() * 2 - 1;
+  let _forceZ = Math.random() * 2 - 1;
+  let _strength = Math.random() * 0.11 - 0.08;
   let _section0 = 12;
   let _section1 = 8;
   let _section2 = 6;
@@ -47,20 +48,20 @@ function generationJSON() {
   let _segment1 = 6;
   let _segment2 = 4;
   let _segment3 = 3;
-  let _start1 = Math.random()*(0.5 - 0.2) + 0.2;
-  let _start2 = Math.random()*(0.5 - 0.2) + 0.2;
-  let _start3 = Math.random()*(0.5 - 0.2) + 0.2;
-  let _taper0 = Math.random()*(0.75 - 0.5) + 0.5;
-  let _taper1 = Math.random()*(0.75 - 0.5) + 0.5;
-  let _taper2 = Math.random()*(0.75 - 0.5) + 0.5;
-  let _taper3 = Math.random()*(0.75 - 0);
-  let _twist0 = Math.random()*(0.2 + 0.2) - 0.2;
-  let _twist1 = Math.random()*(0.75 + 0.2) - 0.2;
-  let _twist2 = Math.random()*(0.75 + 0.2) - 0.2;
-  let _twist3 = Math.random()*(0.75 + 0.2) - 0.2;
-  let _angle1 = Math.random()*(65 - 40) + 40;
-  let _angle2 = Math.random()*(50 - 35) + 35;
-  let _angle3 = Math.random()*(65 - 35) + 35;
+  let _start1 = Math.random() * (0.5 - 0.2) + 0.2;
+  let _start2 = Math.random() * (0.5 - 0.2) + 0.2;
+  let _start3 = Math.random() * (0.5 - 0.2) + 0.2;
+  let _taper0 = Math.random() * (0.75 - 0.5) + 0.5;
+  let _taper1 = Math.random() * (0.75 - 0.5) + 0.5;
+  let _taper2 = Math.random() * (0.75 - 0.5) + 0.5;
+  let _taper3 = Math.random() * (0.75 - 0);
+  let _twist0 = Math.random() * (0.2 + 0.2) - 0.2;
+  let _twist1 = Math.random() * (0.75 + 0.2) - 0.2;
+  let _twist2 = Math.random() * (0.75 + 0.2) - 0.2;
+  let _twist3 = Math.random() * (0.75 + 0.2) - 0.2;
+  let _angle1 = Math.random() * (65 - 40) + 40;
+  let _angle2 = Math.random() * (50 - 35) + 35;
+  let _angle3 = Math.random() * (65 - 35) + 35;
 
 
 
@@ -109,7 +110,7 @@ function generationJSON() {
       },
       "length": {
         "0": _length0,
-        "1": _length1,   
+        "1": _length1,
         "2": _length2,
         "3": _length3
       },
@@ -172,63 +173,63 @@ export default function creationArbres (nb) {
       tree.generate();
       scene.add(tree);
       exporterArbre(tree, index, arbre); 
-      console.log('[' + '|'.repeat(Math.floor((index+1)/nb*100)) + ' '.repeat(100 - Math.floor((index+1)/nb*100)) + ']  ' + (index+1) + '/' + nb);
+      console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
     }
 }
 
 
-function exporterArbre (arbre, i, json) {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let yyyy = today.getFullYear();
-    let hh = String(today.getHours()).padStart(2,'0');
-    let min = String(today.getMinutes()).padStart(2,'0');
-    let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
+function exporterArbre(arbre, i, json) {
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0');
+  let yyyy = today.getFullYear();
+  let hh = String(today.getHours()).padStart(2, '0');
+  let min = String(today.getMinutes()).padStart(2, '0');
+  let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
 
-    // ############## OBJ ############## 
-    // let x = exporterOBJ.parse(tree)
-    // console.log(x)
-    // const blobOBJ = new Blob([x], { type: 'application/octet-stream' });
-    // const urlOBJ = window.URL.createObjectURL(blobOBJ);
-    // const linkOBJ = document.getElementById('downloadLink');
-    // linkOBJ.href = urlOBJ;
-    // linkOBJ.download = date + 'tree_' + i + '.obj';
-    // linkOBJ.click();
-    
-    // ############## GLB ##############
-    exporter.parse(
-        arbre,
-        (glb) => {
-            const blob = new Blob([glb], { type: 'application/octet-stream' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.getElementById('downloadLink');
-            link.href = url;
-            link.download = date + 'tree_' + i + '.glb';
-            link.click();
-        },
-        (err) => {
-            console.error(err);
-        },
-        { binary: true }
-    );
+  // ############## OBJ ############## 
+  // let x = exporterOBJ.parse(tree)
+  // console.log(x)
+  // const blobOBJ = new Blob([x], { type: 'application/octet-stream' });
+  // const urlOBJ = window.URL.createObjectURL(blobOBJ);
+  // const linkOBJ = document.getElementById('downloadLink');
+  // linkOBJ.href = urlOBJ;
+  // linkOBJ.download = date + 'tree_' + i + '.obj';
+  // linkOBJ.click();
 
-    // ############## JSON ##############
-    const blobJSON = new Blob([JSON.stringify(json)], { type: 'text/plain' });
-    const urlJSON = window.URL.createObjectURL(blobJSON);
-    const linkJSON = document.getElementById('downloadLink');
-    linkJSON.href = urlJSON;
-    linkJSON.download = date + 'tree_' + i + '.json';
-    linkJSON.click();
+  // ############## PLY ##############
+  exporter.parse(
+    arbre,
+    (ply) => {
+      const blob = new Blob([ply], { type: 'application/octet-stream' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.getElementById('downloadLink');
+      link.href = url;
+      link.download = date + 'tree_' + i + '.ply';
+      link.click();
+    },
+    (err) => {
+      console.error(err);
+    },
+    { binary: true }
+  );
+
+  // ############## JSON ##############
+  const blobJSON = new Blob([JSON.stringify(json)], { type: 'text/plain' });
+  const urlJSON = window.URL.createObjectURL(blobJSON);
+  const linkJSON = document.getElementById('downloadLink');
+  linkJSON.href = urlJSON;
+  linkJSON.download = date + 'tree_' + i + '.json';
+  linkJSON.click();
 
 
-    // ############## PNG ##############
-    renderer.render(scene, camera);
+  // ############## PNG ##############
+  renderer.render(scene, camera);
 
-    const linkPNG = document.getElementById('downloadLink');
-    linkPNG.href = renderer.domElement.toDataURL('image/png');
-    linkPNG.download = date + 'tree_' + i +'.png';
-    linkPNG.click();
+  const linkPNG = document.getElementById('downloadLink');
+  linkPNG.href = renderer.domElement.toDataURL('image/png');
+  linkPNG.download = date + 'tree_' + i + '.png';
+  linkPNG.click();
 }
 
 
