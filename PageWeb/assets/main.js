@@ -18,6 +18,215 @@ scene.add(ambientLight);
 
 const tree = new EZTree.Tree();
 
+
+
+function getMaxZCoordinates(arbre) {
+  let maxZ = 0; // On commence avec la plus petite valeur possible
+  arbre.traverse((child) => {
+    if (child.isMesh) {
+      const geometry = child.geometry;
+      if (geometry.isBufferGeometry) {
+        const position = geometry.attributes.position;
+        for (let i = 0; i < position.count; i++) {
+          const z = position.getZ(i);
+          maxZ = Math.max(maxZ, z); // Met à jour la valeur maximale
+        }
+      }
+    }
+  });
+  return maxZ;
+}
+
+function genererHistogrammeImage(zValues, filename = 'histogramme_z') {
+  if (!zValues || zValues.length === 0) {
+    console.warn("Aucune coordonnée Z fournie.");
+    return;
+  }
+
+  // === Paramètres de l'histogramme ===
+  const numBins = 30; // nombre de barres
+  const minZ = Math.min(...zValues);
+  const maxZ = Math.max(...zValues);
+  const binSize = (maxZ - minZ) / numBins;
+  const bins = new Array(numBins).fill(0);
+
+  // === Remplissage des bins ===
+  zValues.forEach((z) => {
+    let idx = Math.floor((z - minZ) / binSize);
+    if (idx >= numBins) idx = numBins - 1;
+    bins[idx]++;
+  });
+
+  // === Création du canvas ===
+  const canvas = document.createElement('canvas');
+  const width = 800, height = 400;
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  // === Fond blanc ===
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, width, height);
+
+  // === Dessin de l'histogramme ===
+  const barWidth = width / numBins;
+  const maxCount = Math.max(...bins);
+
+  bins.forEach((count, i) => {
+    const barHeight = (count / maxCount) * (height - 50);
+    const x = i * barWidth;
+    const y = height - barHeight;
+
+    // Dégradé du vert (faible) au rouge (fort)
+    const ratio = count / maxCount;
+    const color = `hsl(${120 - ratio * 120}, 70%, 50%)`; // vert→rouge
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, barWidth - 2, barHeight);
+  });
+
+  // === Axes ===
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(40, height - 10);
+  ctx.lineTo(width - 10, height - 10);
+  ctx.stroke();
+
+  // === Légende ===
+  ctx.fillStyle = '#000';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('Distribution des hauteurs Z', 20, 30);
+
+  // === Export PNG ===
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = filename + '.png';
+  link.click();
+}
+
+
+
+
+function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
+  if (!zValues || zValues.length === 0) {
+    console.warn("Aucune coordonnée Z fournie.");
+    return;
+  }
+
+  // === Paramètres de l'histogramme ===
+  const numBins = 30;
+  const minZ = Math.min(...zValues);
+  const maxZ = Math.max(...zValues);
+  const binSize = (maxZ - minZ) / numBins;
+  const bins = new Array(numBins).fill(0);
+
+  // === Remplissage des bins ===
+  zValues.forEach((z) => {
+    let idx = Math.floor((z - minZ) / binSize);
+    if (idx >= numBins) idx = numBins - 1;
+    bins[idx]++;
+  });
+
+  // === Création du canvas ===
+  const canvas = document.createElement('canvas');
+  const width = 900, height = 500;
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  // === Marges ===
+  const margin = { left: 60, right: 30, top: 40, bottom: 60 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+
+  // === Fond blanc ===
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, width, height);
+
+  // === Dessin des barres ===
+  const barWidth = plotWidth / numBins;
+  const maxCount = Math.max(...bins);
+
+  bins.forEach((count, i) => {
+    const barHeight = (count / maxCount) * plotHeight;
+    const x = margin.left + i * barWidth;
+    const y = height - margin.bottom - barHeight;
+
+    const ratio = count / maxCount;
+    const color = `hsl(${120 - ratio * 120}, 70%, 50%)`; // vert→rouge
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, barWidth - 2, barHeight);
+  });
+
+  // === Axes ===
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  // Axe X
+  ctx.moveTo(margin.left, height - margin.bottom);
+  ctx.lineTo(width - margin.right, height - margin.bottom);
+  // Axe Y
+  ctx.moveTo(margin.left, height - margin.bottom);
+  ctx.lineTo(margin.left, margin.top);
+  ctx.stroke();
+
+  ctx.fillStyle = '#000';
+  ctx.font = '14px sans-serif';
+
+  // === Graduation Y (nombre d’occurrences) ===
+  const numYTicks = 5;
+  for (let i = 0; i <= numYTicks; i++) {
+    const value = Math.round((i / numYTicks) * maxCount);
+    const y = height - margin.bottom - (i / numYTicks) * plotHeight;
+
+    ctx.fillText(value.toString(), margin.left - 40, y + 5);
+
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, y);
+    ctx.lineTo(width - margin.right, y);
+    ctx.stroke();
+  }
+
+  // === Graduation X (valeurs Z) ===
+  const numXTicks = 6;
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= numXTicks; i++) {
+    const zValue = minZ + (i / numXTicks) * (maxZ - minZ);
+    const x = margin.left + (i / numXTicks) * plotWidth;
+    ctx.fillText(zValue.toFixed(2), x, height - margin.bottom + 20);
+  }
+
+  // === Titres ===
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#000';
+  ctx.font = '18px sans-serif';
+  ctx.fillText('Distribution des hauteurs Z', margin.left, margin.top - 10);
+
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('Nombre de points', 0, 0);
+  ctx.restore();
+
+  ctx.textAlign = 'center';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('Valeurs Z', margin.left + plotWidth / 2, height - 20);
+
+  // === Export PNG ===
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = filename + '.png';
+  link.click();
+}
+
+
+
+
+
 function generationJSON() {
   let _level = Math.floor(Math.random()*2) + 2;
   let _prop_length0 = Math.random();
@@ -195,6 +404,8 @@ function generationJSON() {
   return modele
 };
 
+let l_hist = [];
+
 export default function creationArbres (nb) {
     // console.log('textures chargées');
     for (let index = 0; index < nb; index++) {
@@ -202,8 +413,13 @@ export default function creationArbres (nb) {
       tree.loadFromJson(arbre);
       tree.generate();
       scene.add(tree);
-      exporterArbre(tree, index, arbre); 
+      l_hist.push(exporterArbre(tree, index, arbre)); 
       console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
+      if (l_hist.length > nb - 1) {
+        console.log(nb);
+        console.log(l_hist.length);
+        genererHistogrammeImage2(l_hist);
+      };
     }
 }
 
@@ -216,6 +432,9 @@ function exporterArbre(arbre, i, json) {
   let hh = String(today.getHours()).padStart(2, '0');
   let min = String(today.getMinutes()).padStart(2, '0');
   let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
+
+  // Récupérer les coordonnées Z maximales
+  let maxZ = getMaxZCoordinates(arbre);
 
   // ############## OBJ ############## 
   // let x = exporterOBJ.parse(tree)
@@ -260,7 +479,13 @@ function exporterArbre(arbre, i, json) {
   linkPNG.href = renderer.domElement.toDataURL('image/png');
   linkPNG.download = date + 'tree_' + i + '.png';
   linkPNG.click();
-}
+
+
+  return maxZ;
+};
+
+
+
 
 
 // ###################################################
@@ -281,3 +506,11 @@ let vue = Vue.createApp({
     }
   },
 }).mount('#app');
+
+
+
+
+
+
+
+
