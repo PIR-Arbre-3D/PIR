@@ -152,7 +152,7 @@ function generationJSON() {
     },
     "leaves": {
       "type": "ash",
-      "billboard": "single",
+      "billboard": "double",
       "angle": 55,
       "count": 16,
       "start": 0,
@@ -166,7 +166,7 @@ function generationJSON() {
 };
 
 export default function creationArbres (nb) {
-    console.log('textures chargées');
+    // console.log('textures chargées');
     for (let index = 0; index < nb; index++) {
       let arbre = generationJSON();
       tree.loadFromJson(arbre);

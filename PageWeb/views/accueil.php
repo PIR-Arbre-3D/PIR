@@ -29,7 +29,6 @@
         <form @submit.prevent>
             <input type="number" v-model="nb" value=<?= $nb ?> min = 0>
             <button @click="lancerGeneration">Générer</button>
-            {{ nb }}
         </form>
     </div>
 
@@ -38,7 +37,7 @@
     <script type="module">
         import creationArbre from "../assets/main.js"
 
-        creationArbre(15)
+        creationArbre( <?= $nb ?>)
     </script>
 </body>
 </html>
