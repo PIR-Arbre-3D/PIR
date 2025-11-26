@@ -113,6 +113,18 @@ function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
     return;
   }
 
+  // === Parametres de la loi ===
+  let somme = 0;
+  zValues.forEach(valeur => {
+    somme += valeur
+  });
+  let moyenne = somme / zValues.length;
+  somme = 0;
+  zValues.forEach(valeur => {
+    somme += (moyenne - valeur)**2
+  });
+  let ecart_type = (somme / zValues.length)**0.5;
+
   // === Paramètres de l'histogramme ===
   const numBins = 30;
   const minZ = Math.min(...zValues);
@@ -202,7 +214,7 @@ function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
   ctx.textAlign = 'left';
   ctx.fillStyle = '#000';
   ctx.font = '18px sans-serif';
-  ctx.fillText('Distribution des hauteurs Z', margin.left, margin.top - 10);
+  ctx.fillText('Distribution des hauteurs Z. (µ = ' + moyenne.toFixed(2) + " s = " + ecart_type.toFixed(2) +")" , margin.left, margin.top - 10);
 
   ctx.save();
   ctx.translate(20, height / 2);
@@ -424,19 +436,19 @@ export default function creationArbres (nb) {
 };
 
 export function creationHistogramme (nb) {
+  let l_hist = [];
   for (let index = 0; index < nb; index++) {
-      let arbre = generationJSON();
-      tree.loadFromJson(arbre);
-      tree.generate();
-      scene.add(tree);
-      l_hist.push(getMaxZCoordinates(tree)); 
-      console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
-      if (l_hist.length > nb - 1) {
-        console.log(nb);
-        console.log(l_hist.length);
-        genererHistogrammeImage2(l_hist);
-      };
-    }
+    let arbre = generationJSON();
+    tree.loadFromJson(arbre);
+    tree.generate();
+    scene.add(tree);
+    l_hist.push(getMaxZCoordinates(tree)); 
+    console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
+  };
+  
+  console.log(nb);
+  console.log(l_hist.length);
+  genererHistogrammeImage2(l_hist);
 };
 
 
