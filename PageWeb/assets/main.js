@@ -421,7 +421,24 @@ export default function creationArbres (nb) {
         genererHistogrammeImage2(l_hist);
       };
     }
-}
+};
+
+export function creationHistogramme (nb) {
+  for (let index = 0; index < nb; index++) {
+      let arbre = generationJSON();
+      tree.loadFromJson(arbre);
+      tree.generate();
+      scene.add(tree);
+      l_hist.push(getMaxZCoordinates(tree)); 
+      console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
+      if (l_hist.length > nb - 1) {
+        console.log(nb);
+        console.log(l_hist.length);
+        genererHistogrammeImage2(l_hist);
+      };
+    }
+};
+
 
 
 function exporterArbre(arbre, i, json) {
@@ -503,6 +520,9 @@ let vue = Vue.createApp({
   methods: {
     lancerGeneration(){
       creationArbres(this.nb);
+    },
+    lancerHistogramme(){
+      creationHistogramme(this.nb);
     }
   },
 }).mount('#app');

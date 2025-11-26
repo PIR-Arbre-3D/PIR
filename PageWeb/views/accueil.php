@@ -29,6 +29,7 @@
         <form @submit.prevent>
             <input type="number" v-model="nb" value=<?= $nb ?> min = 0>
             <button @click="lancerGeneration">Générer</button>
+            <button @click="lancerHistogramme">Histogramme</button>
         </form>
     </div>
 
