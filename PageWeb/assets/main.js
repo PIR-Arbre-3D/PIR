@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as EZTree from '@dgreenheck/ez-tree';
-import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
+import { PLYExporter } from './PLYExporter.js';
 const exporter = new PLYExporter();
 
 // import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
@@ -418,21 +418,13 @@ function generationJSON() {
 
 let l_hist = [];
 
-export default function creationArbres (nb) {
-    // console.log('textures chargées');
-    for (let index = 0; index < nb; index++) {
-      let arbre = generationJSON();
-      tree.loadFromJson(arbre);
-      tree.generate();
-      scene.add(tree);
-      l_hist.push(exporterArbre(tree, index, arbre)); 
-      console.log('[' + '|'.repeat(Math.floor((index + 1) / nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / nb * 100)) + ']  ' + (index+1) + '/' + nb);
-      if (l_hist.length > nb - 1) {
-        console.log(nb);
-        console.log(l_hist.length);
-        genererHistogrammeImage2(l_hist);
-      };
-    }
+export default function creationArbres (index, date) {
+// console.log('textures chargées');
+  let arbre = generationJSON();
+  tree.loadFromJson(arbre);
+  tree.generate();
+  scene.add(tree);
+  exporterArbre(tree, index, arbre, date); 
 };
 
 export function creationHistogramme (nb) {
@@ -453,14 +445,7 @@ export function creationHistogramme (nb) {
 
 
 
-function exporterArbre(arbre, i, json) {
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0');
-  let yyyy = today.getFullYear();
-  let hh = String(today.getHours()).padStart(2, '0');
-  let min = String(today.getMinutes()).padStart(2, '0');
-  let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
+function exporterArbre(arbre, i, json, date) {
 
   // Récupérer les coordonnées Z maximales
   let maxZ = getMaxZCoordinates(arbre);
@@ -491,6 +476,7 @@ function exporterArbre(arbre, i, json) {
     },
     { binary: true }
   );
+
 
   // ############## JSON ##############
   const blobJSON = new Blob([JSON.stringify(json)], { type: 'text/plain' });
@@ -531,7 +517,18 @@ let vue = Vue.createApp({
   },
   methods: {
     lancerGeneration(){
-      creationArbres(this.nb);
+      let today = new Date();
+      let dd = String(today.getDate()).padStart(2, '0');
+      let mm = String(today.getMonth() + 1).padStart(2, '0');
+      let yyyy = today.getFullYear();
+      let hh = String(today.getHours()).padStart(2, '0');
+      let min = String(today.getMinutes()).padStart(2, '0');
+      let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
+      for (let index = 0; index < this.nb; index++) {
+        creationArbres(index, date);
+        console.log('[' + '|'.repeat(Math.floor((index + 1) / this.nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / this.nb * 100)) + ']  ' + (index+1) + '/' + this.nb);
+
+      }
     },
     lancerHistogramme(){
       creationHistogramme(this.nb);
