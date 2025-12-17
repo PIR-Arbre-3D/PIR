@@ -241,7 +241,6 @@ function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
 
 function generationJSON(JSON_normalise = {}) {
   if (JSON.stringify(JSON_normalise) === '{}') {
-    console.log("Génération du JSON normalisé")
     JSON_normalise = {
       "norm_level" : Math.random(),
       "norm_length0" : Math.random(),
@@ -292,10 +291,10 @@ function generationJSON(JSON_normalise = {}) {
   let _radius1 = 0.63;
   let _radius2 = 0.76;
   let _radius3 = 0.7;
-  let _gnarliness0 = JSON_normalise["norm_gnarliness0"]*(0.08 + 0.08) - 0.08;
+  let _gnarliness0 = JSON_normalise["norm_gnarliness0"] * (0.08 + 0.08) - 0.08;
   let _gnarliness1 = JSON_normalise["norm_gnarliness1"] * (0.5 - 0.20) * (Math.floor(JSON_normalise["signe_gnarliness1"]*2)*2 - 1);    
   let _gnarliness2 = JSON_normalise["norm_gnarliness2"] * (0.5 - 0.15) * (Math.floor(JSON_normalise["signe_gnarliness2"]*2)*2 - 1);
-  let _gnarliness3 = JSON_normalise["norm_gnarliness3"] * (0.5 - 0.05) * (Math.floor(JSON_normalise["signe_gnarlinees3"]*2)*2 - 1);
+  let _gnarliness3 = JSON_normalise["norm_gnarliness3"] * (0.5 - 0.05) * (Math.floor(JSON_normalise["signe_gnarliness3"]*2)*2 - 1);
   let _forceX = JSON_normalise["norm_forceX"]*2 - 1;
   let _forceY = JSON_normalise["norm_forceY"]*2 - 1;
   let _forceZ = JSON_normalise["norm_forceZ"]*2 - 1;
@@ -423,7 +422,7 @@ function generationJSON(JSON_normalise = {}) {
 
 let l_hist = [];
 
-export default function creationArbres (index, date, param) {
+async function creationArbres (index, date, param) {
 // console.log('textures chargées');
   let resultat = generationJSON();
   let arbre = resultat["modele"];
@@ -431,7 +430,7 @@ export default function creationArbres (index, date, param) {
   tree.loadFromJson(arbre);
   tree.generate();
   scene.add(tree);
-  exporterArbre(tree, index, arbre, arbre_normalise, date, param); 
+  return await exporterArbre(tree, index, arbre, arbre_normalise, date, param); 
 };
 
 export function creationHistogramme (nb) {
@@ -452,7 +451,7 @@ export function creationHistogramme (nb) {
 
 
 
-function exporterArbre(arbre, i, json, json_normalise, date, param) {
+async function exporterArbre(arbre, i, json, json_normalise, date, param) {
 
   // Récupérer les coordonnées Z maximales
   let maxZ = getMaxZCoordinates(arbre);
@@ -468,23 +467,31 @@ function exporterArbre(arbre, i, json, json_normalise, date, param) {
   // linkOBJ.click();
 
   // ############## PLY ##############
-  if (param["ply"]) {
-    exporter.parse(
-      arbre,
-      (ply) => {
-        const blob = new Blob([ply], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.getElementById('downloadLink');
-        link.href = url;
-        link.download = date + 'tree_' + i + '.ply';
-        link.click();
-      },
-      (err) => {
-        console.error(err);
-      },
-      { binary: true }
-    )
-  };
+  const exportPromise = new Promise((resolve, reject) => {
+    if (param["ply"]) {
+      exporter.parse(
+        arbre,
+        (ply) => {
+          const blob = new Blob([ply], { type: 'application/octet-stream' });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.getElementById('downloadLink');
+          link.href = url;
+          link.download = date + 'tree_' + i + '.ply';
+          link.click();
+          resolve();
+        },
+        (err) => {
+          console.error(err);
+          reject(err);
+        },
+        { binary: true }
+      );
+    } else {
+      resolve();
+    }
+  });
+
+  await exportPromise;
   
 
   // ############## JSON ##############
@@ -534,13 +541,16 @@ let vue = Vue.createApp({
       ply:true,
       png:false,
       JSON_file:false,
-      JSON_norm:true
+      JSON_norm:true,
+      bloque : false,
+      index : 0
     };
   },
   computed: {
   },
   methods: {
-    lancerGeneration(){
+    async lancerGeneration(){
+      this.bloque = true;
       let param = {
         "ply" : this.ply,
         "png" : this.png,
@@ -554,11 +564,14 @@ let vue = Vue.createApp({
       let hh = String(today.getHours()).padStart(2, '0');
       let min = String(today.getMinutes()).padStart(2, '0');
       let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
-      for (let index = 0; index < this.nb; index++) {
-        creationArbres(index, date, param);
-        console.log('[' + '|'.repeat(Math.floor((index + 1) / this.nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / this.nb * 100)) + ']  ' + (index+1) + '/' + this.nb);
+      for (let index = 1; index < this.nb + 1; index++) {
+        this.index = index;
+        await creationArbres(index, date, param);
+        // console.log((index) + '/' + this.nb);
 
       }
+      this.bloque = false;
+      this.index = 0;
     },
     lancerHistogramme(){
       creationHistogramme(this.nb);

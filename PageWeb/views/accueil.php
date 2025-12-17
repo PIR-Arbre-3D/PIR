@@ -27,15 +27,18 @@
 
     <div id="app">
         <form @submit.prevent>
-            <input type="number" v-model="nb" value=<?= $nb ?> min = 0>
-            <input type="checkbox" v-model="ply" checked>PLY
-            <input type="checkbox" v-model="png">PNG
-            <input type="checkbox" v-model="JSON_file">JSON
-            <input type="checkbox" v-model="JSON_norm" checked>JSON Normalisé
+            <input type="number" v-model="nb" value=1 min = 0 :readonly="bloque">
+            <input type="checkbox" v-model="ply" checked :disabled="bloque">PLY
+            <input type="checkbox" v-model="png" :disabled="bloque">PNG
+            <input type="checkbox" v-model="JSON_file" :disabled="bloque">JSON
+            <input type="checkbox" v-model="JSON_norm" checked :disabled="bloque">JSON Normalisé
             <br>
-            <button @click="lancerGeneration">Générer</button>
-            <button @click="lancerHistogramme">Histogramme</button>
+            <button @click="lancerGeneration" :disabled="bloque">Générer</button>
+            <button @click="lancerHistogramme" :disabled="bloque">Histogramme</button>
         </form>
+
+        Progression : 
+        <progress :max="nb" :value="index"></progress>   {{index}}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
