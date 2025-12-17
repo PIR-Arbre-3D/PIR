@@ -28,6 +28,11 @@
     <div id="app">
         <form @submit.prevent>
             <input type="number" v-model="nb" value=<?= $nb ?> min = 0>
+            <input type="checkbox" v-model="ply" checked>PLY
+            <input type="checkbox" v-model="png">PNG
+            <input type="checkbox" v-model="JSON_file">JSON
+            <input type="checkbox" v-model="JSON_norm" checked>JSON Normalisé
+            <br>
             <button @click="lancerGeneration">Générer</button>
             <button @click="lancerHistogramme">Histogramme</button>
         </form>
@@ -35,10 +40,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="module" src="../assets/main.js"></script>
-    <script type="module">
-        import creationArbre from "../assets/main.js"
-
-        creationArbre( <?= $nb ?>)
-    </script>
 </body>
 </html>
