@@ -14,18 +14,15 @@ import tifffile
 
 
 
-def recup_maxima(counts):
+def recup_vois(mat, x, y):
     l_r = []
-    if counts[1] < counts[0]:
-        l_r.append(0)
-    for i in range(1, len(counts)-2):
-        if counts[i -1] < counts[i] and counts[i + 1] < counts[i]:
-            l_r.append(i)
-    if counts[len(counts) - 2] < counts[len(counts) - 1]:
-        l_r.append(len(counts))
-    if len(l_r)>=6:
-        l_r = l_r[-6:]
-    return l_r
+    for i in range(-15, 16):
+        for j in range(-15, 16):
+            if i == 0 and j == 0:
+                continue
+            if 0 <= x + i < len(mat) and 0 <= y + j < len(mat):
+                l_r.append(mat[x + i][y + j])
+    return np.array(l_r, dtype='float32')
 
 # def recup_maxima_2(counts):
 #     l_r = []
