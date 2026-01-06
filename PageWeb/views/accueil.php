@@ -61,6 +61,8 @@
         </div>
 
     </form>
+    Progression : 
+    <progress :max="nb" :value="index"></progress>   {{index}}
 </div>
 
 
