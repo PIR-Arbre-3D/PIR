@@ -573,7 +573,7 @@ async function exporterArbre(arbre, i, json, json_normalise, date, param) {
   // linkOBJ.click();
 
   // ############## PLY ##############
-  const exportPromise = new Promise((resolve, reject) => {
+  const exportPromisePLY = new Promise((resolve, reject) => {
     if (param["ply"]) {
       exporter.parse(
         arbre,
@@ -597,28 +597,42 @@ async function exporterArbre(arbre, i, json, json_normalise, date, param) {
     }
   });
 
-  await exportPromise;
+  await exportPromisePLY;
   
 
   // ############## JSON ##############
-  if (param["JSON"]) {
-    const blobJSON = new Blob([JSON.stringify(json)], { type: 'text/plain' });
-    const urlJSON = window.URL.createObjectURL(blobJSON);
-    const linkJSON = document.getElementById('downloadLink');
-    linkJSON.href = urlJSON;
-    linkJSON.download = date + 'tree_' + i + '.json';
-    linkJSON.click();
-  };
+  const exportPromiseJSON = new Promise((resolve, reject) => {
+    if (param["JSON"]) {
+      const blobJSON = new Blob([JSON.stringify(json)], { type: 'text/plain' });
+      const urlJSON = window.URL.createObjectURL(blobJSON);
+      const linkJSON = document.getElementById('downloadLink');
+      linkJSON.href = urlJSON;
+      linkJSON.download = date + 'tree_' + i + '.json';
+      linkJSON.click();
+      resolve();
+    } else {
+      resolve();
+    };
+  });
+
+  await exportPromiseJSON;
 
   // ############## JSON  Normalisé ###########
-  if (param["JSON_n"]) {
-      const blobJSON_norm = new Blob([JSON.stringify(json_normalise)], { type: 'text/plain' });
-    const urlJSON_norm = window.URL.createObjectURL(blobJSON_norm);
-    const linkJSON_norm = document.getElementById('downloadLink');
-    linkJSON_norm.href = urlJSON_norm;
-    linkJSON_norm.download = date + 'tree_' + i + '_normalise.json';
-    linkJSON_norm.click();
-  };
+  const exportPromiseJSOnorm = new Promise((resolve, reject) => {
+    if (param["JSON_n"]) {
+        const blobJSON_norm = new Blob([JSON.stringify(json_normalise)], { type: 'text/plain' });
+      const urlJSON_norm = window.URL.createObjectURL(blobJSON_norm);
+      const linkJSON_norm = document.getElementById('downloadLink');
+      linkJSON_norm.href = urlJSON_norm;
+      linkJSON_norm.download = date + 'tree_' + i + '_normalise.json';
+      linkJSON_norm.click();
+      resolve();
+    } else {
+      resolve();
+    };
+  });
+
+  await exportPromiseJSONnorm
 
   // ############## PNG ##############
   if (param["png"]) {
