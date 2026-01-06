@@ -2,10 +2,7 @@
 <html>
 <head>
     <title>Téléchargement d'arbres</title>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+    <link rel="stylesheet" href="../assets/style.css">
     <meta charset="utf-8">
 </head>
 
@@ -25,18 +22,47 @@
     
 
 
-    <div id="app">
-        <form @submit.prevent>
-            <input type="number" v-model="nb" value=<?= $nb ?> min = 0>
-            <input type="checkbox" v-model="ply" checked>PLY
-            <input type="checkbox" v-model="png">PNG
-            <input type="checkbox" v-model="JSON_file">JSON
-            <input type="checkbox" v-model="JSON_norm" checked>JSON Normalisé
-            <br>
-            <button @click="lancerGeneration">Générer</button>
+<div id="app">
+    <form @submit.prevent>
+
+        <input type="number" v-model="nb" min="0">
+
+        <div class="options">
+            <label>
+                <input type="checkbox" v-model="ply">
+                PLY
+            </label>
+
+            <label>
+                <input type="checkbox" v-model="png">
+                PNG
+            </label>
+
+            <label>
+                <input type="checkbox" v-model="JSON_file">
+                JSON
+            </label>
+
+            <label>
+                <input type="checkbox" v-model="JSON_norm">
+                JSON Normalisé
+            </label>
+        </div>
+
+        <div class="actions">
+            <button class="primary" @click="lancerGeneration">Générer</button>
+        </div>
+
+        <div class="actions secondary">
             <button @click="lancerHistogramme">Histogramme</button>
-        </form>
-    </div>
+            <input type="file" id="folderInput" webkitdirectory multiple>
+            <button @click="lancerExport">Exporter JSON</button>
+
+        </div>
+
+    </form>
+</div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="module" src="../assets/main.js"></script>

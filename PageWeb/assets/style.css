@@ -1,0 +1,103 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+}
+
+#app {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    width: 380px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+input[type="number"] {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.1);
+}
+
+/* Boutons et actions */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions.secondary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Ligne pour Histogramme + Export + File input */
+.actions.secondary .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Boutons */
+button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: #4cafef;
+    color: white;
+    transition: 0.2s;
+    flex: 1;
+}
+
+button:hover {
+    background: #6bbcff;
+}
+
+button.primary {
+    background: #4cafef;
+}
+
+/* Input file */
+input[type="file"] {
+    flex: 2;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}

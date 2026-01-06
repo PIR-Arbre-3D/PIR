@@ -235,6 +235,112 @@ function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
   link.click();
 }
 
+function genererJSONNormalise() {
+  return {
+    "norm_level" : Math.random(),
+    "norm_length0" : Math.random(),
+    "norm_length1" : Math.random(), 
+    "norm_length2" : Math.random(),
+    "norm_lenght3" : Math.random(),
+    "norm_children0" : Math.random(),
+    "norm_children1" : Math.random(),
+    "norm_children2" : Math.random(),
+    "norm_radius0" : Math.random(),
+    "norm_gnarliness0" : Math.random(),
+    "norm_gnarliness1" : Math.random(),
+    "signe_gnarliness1" : Math.random(),
+    "norm_gnarliness2" : Math.random(),
+    "signe_gnarliness2" : Math.random(),
+    "norm_gnarliness3" : Math.random(),
+    "signe_gnarliness3" : Math.random(),
+    "norm_forceX" : Math.random(),
+    "norm_forceY" : Math.random(),
+    "norm_forceZ" : Math.random(),
+    "norm_strength" : Math.random(),
+    "norm_start1" : Math.random(),
+    "norm_start2" : Math.random(),
+    "norm_start3" : Math.random(),
+    "norm_taper0" : Math.random(),
+    "norm_taper1" : Math.random(),
+    "norm_taper2" : Math.random(),
+    "norm_taper3" : Math.random(),
+    "norm_twist0" : Math.random(),
+    "norm_twist1" : Math.random(),
+    "norm_twist2" : Math.random(),
+    "norm_twist3" : Math.random(),
+    "norm_angle1" : Math.random(),
+    "norm_angle2" : Math.random(),
+    "norm_angle3" : Math.random()
+  };
+};
+
+
+function genererJSONFinal(JSON_normalise) {
+  if (!JSON_normalise || Object.keys(JSON_normalise).length === 0) {
+    JSON_normalise = genererJSONNormalise();
+  }
+
+  const _level = Math.floor(JSON_normalise["norm_level"]*2) + 2;
+  const _length0 = JSON_normalise["norm_length0"]*(65 - 35) + 35;
+  const _length1 = JSON_normalise["norm_length1"]*(30 - 15) + 15;
+  const _length2 = JSON_normalise["norm_length2"]*(10 - 5) + 5;
+  const _length3 = JSON_normalise["norm_lenght3"]*(10 - 4) + 4;
+  const _children0 = JSON_normalise["norm_children0"]*10 + 4 + 6*JSON_normalise["norm_length0"];
+  const _children1 = JSON_normalise["norm_children1"]*(7 - 2) + 2;
+  const _children2 = JSON_normalise["norm_children2"]*(5 - 0) + 0;
+  const _radius0 = Math.sqrt(JSON_normalise["norm_radius0"])*1.7 + 0.8 + 1.2*JSON_normalise["norm_length0"];
+  const _radius1 = 0.63;
+  const _radius2 = 0.76;
+  const _radius3 = 0.7;
+  const _gnarliness0 = JSON_normalise["norm_gnarliness0"]*(0.08 + 0.08) - 0.08;
+  const _gnarliness1 = JSON_normalise["norm_gnarliness1"] * (0.5 - 0.20) * (Math.floor(JSON_normalise["signe_gnarliness1"]*2)*2 - 1);    
+  const _gnarliness2 = JSON_normalise["norm_gnarliness2"] * (0.5 - 0.15) * (Math.floor(JSON_normalise["signe_gnarliness2"]*2)*2 - 1);
+  const _gnarliness3 = JSON_normalise["norm_gnarliness3"] * (0.5 - 0.05) * (Math.floor(JSON_normalise["signe_gnarliness3"]*2)*2 - 1);
+  const _forceX = JSON_normalise["norm_forceX"]*2 - 1;
+  const _forceY = JSON_normalise["norm_forceY"]*2 - 1;
+  const _forceZ = JSON_normalise["norm_forceZ"]*2 - 1;
+  const _strength = Math.pow(JSON_normalise["norm_strength"], 1.5)*0.11 - 0.08;
+  const _section0 = 12, _section1 = 8, _section2 = 6, _section3 = 4;
+  const _segment0 = 12, _segment1 = 6, _segment2 = 4, _segment3 = 3;
+  const _start1 = JSON_normalise["norm_start1"]*(0.5 - 0.2) + 0.2;
+  const _start2 = JSON_normalise["norm_start2"]*(0.5 - 0.2) + 0.2;
+  const _start3 = JSON_normalise["norm_start3"]*(0.5 - 0.2) + 0.2;
+  const _taper0 = JSON_normalise["norm_taper0"]*(0.75 - 0.5) + 0.5;
+  const _taper1 = JSON_normalise["norm_taper1"]*(0.75 - 0.5) + 0.5;
+  const _taper2 = JSON_normalise["norm_taper2"]*(0.75 - 0.5) + 0.5;
+  const _taper3 = JSON_normalise["norm_taper3"]*(0.75 - 0);
+  const _twist0 = JSON_normalise["norm_twist0"]*(0.2 + 0.2) - 0.2;
+  const _twist1 = JSON_normalise["norm_twist1"]*(0.75 + 0.2) - 0.2;
+  const _twist2 = JSON_normalise["norm_twist2"]*(0.75 + 0.2) - 0.2;
+  const _twist3 = JSON_normalise["norm_twist3"]*(0.75 + 0.2) - 0.2;
+  const _angle1 = JSON_normalise["norm_angle1"]*(65 - 40) + 40;
+  const _angle2 = JSON_normalise["norm_angle2"]*(50 - 35) + 35;
+  const _angle3 = JSON_normalise["norm_angle3"]*(65 - 35) + 35;
+
+  // Création du modèle final
+  const modele = {
+    "seed": 36330,
+    "type": "deciduous",
+    "bark": { "type":"oak", "tint":13552830, "flatShading":false, "textured":true, "textureScale":{"x":0.5,"y":5} },
+    "branch": {
+      "levels": _level,
+      "angle": {"1": _angle1, "2": _angle2, "3": _angle3},
+      "children": {"0": _children0,"1": _children1,"2": _children2},
+      "force": { "direction":{"x":_forceX,"y":_forceY,"z":_forceZ}, "strength": _strength },
+      "gnarliness": {"0":_gnarliness0,"1":_gnarliness1,"2":_gnarliness2,"3":_gnarliness3},
+      "length": {"0":_length0,"1":_length1,"2":_length2,"3":_length3},
+      "radius": {"0":_radius0,"1":_radius1,"2":_radius2,"3":_radius3},
+      "sections": {"0":_section0,"1":_section1,"2":_section2,"3":_section3},
+      "segments": {"0":_segment0,"1":_segment1,"2":_segment2,"3":_segment3},
+      "start": {"1":_start1,"2":_start2,"3":_start3},
+      "taper": {"0":_taper0,"1":_taper1,"2":_taper2,"3":_taper3},
+      "twist": {"0":_twist0,"1":_twist1,"2":_twist2,"3":_twist3}
+    },
+    "leaves": {"type":"ash","billboard":"double","angle":55,"count":16,"start":0,"size":1,"sizeVariance":0.72,"tint":16777215,"alphaTest":0.5}
+  };
+
+  return {"modele": modele, "JSON_normalise": JSON_normalise};
+};
 
 
 
@@ -423,7 +529,7 @@ function generationJSON(JSON_normalise = {}) {
 
 let l_hist = [];
 
-export default function creationArbres (index, date, param) {
+async function creationArbres (index, date, param) {
 // console.log('textures chargées');
   let resultat = generationJSON();
   let arbre = resultat["modele"];
@@ -431,7 +537,7 @@ export default function creationArbres (index, date, param) {
   tree.loadFromJson(arbre);
   tree.generate();
   scene.add(tree);
-  exporterArbre(tree, index, arbre, arbre_normalise, date, param); 
+  return await exporterArbre(tree, index, arbre, arbre_normalise, date, param); 
 };
 
 export function creationHistogramme (nb) {
@@ -452,7 +558,7 @@ export function creationHistogramme (nb) {
 
 
 
-function exporterArbre(arbre, i, json, json_normalise, date, param) {
+async function exporterArbre(arbre, i, json, json_normalise, date, param) {
 
   // Récupérer les coordonnées Z maximales
   let maxZ = getMaxZCoordinates(arbre);
@@ -468,23 +574,31 @@ function exporterArbre(arbre, i, json, json_normalise, date, param) {
   // linkOBJ.click();
 
   // ############## PLY ##############
-  if (param["ply"]) {
-    exporter.parse(
-      arbre,
-      (ply) => {
-        const blob = new Blob([ply], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.getElementById('downloadLink');
-        link.href = url;
-        link.download = date + 'tree_' + i + '.ply';
-        link.click();
-      },
-      (err) => {
-        console.error(err);
-      },
-      { binary: true }
-    )
-  };
+  const exportPromise = new Promise((resolve,reject)=> {
+    if (param["ply"]) {
+      exporter.parse(
+        arbre,
+        (ply) => {
+          const blob = new Blob([ply], { type: 'application/octet-stream' });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.getElementById('downloadLink');
+          link.href = url;
+          link.download = date + 'tree_' + i + '.ply';
+          link.click();
+          resolve();
+        },
+        (err) => {
+          console.error(err);
+          reject(err);
+        },
+        { binary: true }
+      );
+    } else {
+      resolve();
+    }
+  });
+
+  await exportPromise;
   
 
   // ############## JSON ##############
@@ -519,6 +633,48 @@ function exporterArbre(arbre, i, json, json_normalise, date, param) {
   return maxZ;
 };
 
+function generationDossier() {
+  const input = document.getElementById("folderInput");
+  if (!input.files.length) {
+    alert("Veuillez sélectionner un dossier contenant des fichiers JSON.");
+    return;
+  }
+
+  const files = Array.from(input.files).filter(f => f.name.endsWith(".json"));
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        // Lire et parser le JSON
+        let jsonData = JSON.parse(e.target.result);
+
+        // Appeler  fonction de dénormalisation
+        let arbre = genererJSONFinal(jsonData)["modele"];
+        let newTree = new EZTree.Tree();
+        let newScene = new THREE.Scene();
+        newTree.loadFromJson(arbre);
+        newTree.generate();
+        newScene.add(newTree);
+
+        console.log('arbre', arbre)
+
+        // Appeler  fonction d'export
+        exporterArbre(newTree, '', arbre, jsonData, file.name.replace(/\.json$/i, ""), {
+        "ply" : true,
+        "png" : false,
+        "JSON" : false,
+        "JSON_n" : false
+      });
+
+      } catch (err) {
+        console.error("Erreur JSON dans le fichier :", file.name, err);
+      }
+    };
+    reader.readAsText(file);
+  });
+};
+
 
 
 
@@ -534,13 +690,16 @@ let vue = Vue.createApp({
       ply:true,
       png:false,
       JSON_file:false,
-      JSON_norm:true
+      JSON_norm:true,
+      bloque:false,
+      index:0
     };
   },
   computed: {
   },
   methods: {
-    lancerGeneration(){
+    async lancerGeneration(){
+      this.bloque = true;
       let param = {
         "ply" : this.ply,
         "png" : this.png,
@@ -554,22 +713,23 @@ let vue = Vue.createApp({
       let hh = String(today.getHours()).padStart(2, '0');
       let min = String(today.getMinutes()).padStart(2, '0');
       let date = yyyy + '_' + mm + '_' + dd + '__' + hh + '_' + min + '_';
-      for (let index = 0; index < this.nb; index++) {
-        creationArbres(index, date, param);
-        console.log('[' + '|'.repeat(Math.floor((index + 1) / this.nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / this.nb * 100)) + ']  ' + (index+1) + '/' + this.nb);
+      for (let index = 1; index < this.nb +1; index++) {
+        this.index = index;
+        await creationArbres(index, date, param);
+        //console.log('[' + '|'.repeat(Math.floor((index + 1) / this.nb * 100)) + ' '.repeat(100 - Math.floor((index + 1) / this.nb * 100)) + ']  ' + (index+1) + '/' + this.nb);
 
       }
+      this.bloque = false;
+      this.index = 0;
     },
     lancerHistogramme(){
       creationHistogramme(this.nb);
+    },
+    lancerExport(){
+      generationDossier("D:/Tom/predictions/");
     }
   },
 }).mount('#app');
-
-
-
-
-
 
 
 
