@@ -31,5 +31,5 @@ for e in enleverJSON :
     os.remove(f"Fichiers_Bruts/{json}{e}_normalise.json")
 
 # print(liste_finale, len(liste_finale), maxi)
-# print(enleverJSON, enleverPLY, len(fichier_2))
+print(enleverJSON, enleverPLY, len(fichier_2))
 print(f"Tu as {len(liste_finale)}, il faut regénerer {maxi-len(liste_finale)} fichiers pour en avoir {maxi}, il vaut mieux en générer {round((maxi-len(liste_finale))*1.7)}")

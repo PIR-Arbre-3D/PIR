@@ -21,7 +21,9 @@ def fix_number_of_points(points, target_n=512):
     retourne : tensor (target_n, 3)
     """
     n = points.shape[0]
-
+    if n>PointCloudDataset.max:
+        PointCloudDataset.max = n
+    # print(n)
     if n == target_n:
         return points
 
@@ -37,6 +39,7 @@ def fix_number_of_points(points, target_n=512):
 
 
 class PointCloudDataset(Dataset):
+    max = 0
     def __init__(self, cloud_dir, param_dir):
         """
         cloud_dir : dossier contenant les fichiers .txt des nuages
@@ -69,7 +72,7 @@ class PointCloudDataset(Dataset):
         # ...
         points = np.loadtxt(cloud_path)          # (N, 3)
         points = torch.tensor(points, dtype=torch.float32)
-        points = fix_number_of_points(points, target_n=900)
+        points = fix_number_of_points(points, 500)
 
         # --- 2) Charger les paramètres (.json) ---
         # On suppose même nom de fichier
@@ -133,14 +136,7 @@ class PointNetRegressor(nn.Module):
 # 3. ENTRAÎNEMENT
 # ============================================================
 
-def train():
-    # --------------------------------------------------------
-    # ### À MODIFIER ICI : CHEMINS DES DONNÉES ###
-    # --------------------------------------------------------
-    dataset = PointCloudDataset(
-        cloud_dir="C:/Depthmap/Output/",   # <-- dossier des .txt
-        param_dir="D:/Tom/PIR/test_bib_arbre/"    # <-- dossier des .json
-    )
+def train(dataset):
 
     dataloader = DataLoader(
         dataset,
@@ -156,7 +152,7 @@ def train():
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
 
-    epochs = 1000
+    epochs = 200
 
     for epoch in range(epochs):
         total_loss = 0.0
@@ -275,10 +271,13 @@ def load_and_predict(weights_path, cloud_to_test_dir, params_reference_dir):
 # ============================================================
 
 if __name__ == "__main__":
-
-    '''
+    # '''
+    dataset = PointCloudDataset(
+        cloud_dir="D:/ENSG/PIR/DepthMap/Output/",   # <-- dossier des .txt
+        param_dir="D:/ENSG/PIR/01_CODE/PIR/Entrainement/"    # <-- dossier des .json
+    )
     # 1. Entraîner
-    model, dataset = train()
+    model, dataset = train(dataset)
     
     # 2. Sauvegarder les poids (le fichier apparaîtra dans ton dossier de projet)
     torch.save(model.state_dict(), "pointnet_arbre.pth")
@@ -293,10 +292,11 @@ if __name__ == "__main__":
     )
     
     new_dataset = PointCloudDataset(
-        cloud_dir="C:/Depthmap/Output/",   # <-- dossier des .txt
-        param_dir="D:/Tom/PIR/test_bib_arbre/"    # <-- dossier des .json
+        cloud_dir="D:/ENSG/PIR/DepthMap/Output/",   # <-- dossier des .txt
+        param_dir="D:/ENSG/PIR/01_CODE/PIR/Entrainement/"    # <-- dossier des .json
     )
     
 
     # 3. Tester (optionnel ici puisque tu viens d'entraîner)
     test2(model, new_dataset)
+    '''
