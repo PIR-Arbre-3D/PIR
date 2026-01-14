@@ -57,7 +57,22 @@
             <button @click="lancerHistogramme">Histogramme</button>
             <input type="file" id="folderInput" webkitdirectory multiple>
             <button @click="lancerExport">Exporter JSON</button>
+        </div>
+        <div class="actions secondary"> 
+            <div class="options">
+                <label>
+                    <input type="radio" name="import" v-model="importation_json" checked>
+                    JSON
+                </label>
 
+                <label>
+                    <input type="radio" name="import">
+                    JSON Normalisé
+                </label>
+            </div>
+
+            <input type="text" v-model="input_json">
+            <button @click="lancerCreation()">Créer l'arbre</button>
         </div>
 
     </form>

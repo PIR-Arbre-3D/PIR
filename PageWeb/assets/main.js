@@ -19,7 +19,11 @@ scene.add(ambientLight);
 const tree = new EZTree.Tree();
 
 
-
+/**
+ * Permet de récupérer la hauteur de l'arbre
+ * @param {tree} arbre - Arbre généré par EZ-Tree
+ * @returns {float} La hauteur de l'arbre (en mètre)
+ */
 function getMaxZCoordinates(arbre) {
   let maxZ = 0; // On commence avec la plus petite valeur possible
   arbre.traverse((child) => {
@@ -37,77 +41,13 @@ function getMaxZCoordinates(arbre) {
   return maxZ;
 }
 
+
+/**
+ * Permet de générer l'histogramme des hauteurs d'arbres
+ * @param {list} zValues - Liste des hauteurs d'arbres
+ * @param {string} filename - Optionnel : Nom du fichier en sortie, par défaut : 'histogramme_z'  
+*/
 function genererHistogrammeImage(zValues, filename = 'histogramme_z') {
-  if (!zValues || zValues.length === 0) {
-    console.warn("Aucune coordonnée Z fournie.");
-    return;
-  }
-
-  // === Paramètres de l'histogramme ===
-  const numBins = 30; // nombre de barres
-  const minZ = Math.min(...zValues);
-  const maxZ = Math.max(...zValues);
-  const binSize = (maxZ - minZ) / numBins;
-  const bins = new Array(numBins).fill(0);
-
-  // === Remplissage des bins ===
-  zValues.forEach((z) => {
-    let idx = Math.floor((z - minZ) / binSize);
-    if (idx >= numBins) idx = numBins - 1;
-    bins[idx]++;
-  });
-
-  // === Création du canvas ===
-  const canvas = document.createElement('canvas');
-  const width = 800, height = 400;
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-
-  // === Fond blanc ===
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, width, height);
-
-  // === Dessin de l'histogramme ===
-  const barWidth = width / numBins;
-  const maxCount = Math.max(...bins);
-
-  bins.forEach((count, i) => {
-    const barHeight = (count / maxCount) * (height - 50);
-    const x = i * barWidth;
-    const y = height - barHeight;
-
-    // Dégradé du vert (faible) au rouge (fort)
-    const ratio = count / maxCount;
-    const color = `hsl(${120 - ratio * 120}, 70%, 50%)`; // vert→rouge
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, barWidth - 2, barHeight);
-  });
-
-  // === Axes ===
-  ctx.strokeStyle = '#333';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(40, height - 10);
-  ctx.lineTo(width - 10, height - 10);
-  ctx.stroke();
-
-  // === Légende ===
-  ctx.fillStyle = '#000';
-  ctx.font = '16px sans-serif';
-  ctx.fillText('Distribution des hauteurs Z', 20, 30);
-
-  // === Export PNG ===
-  const link = document.createElement('a');
-  link.href = canvas.toDataURL('image/png');
-  link.download = filename + '.png';
-  link.click();
-}
-
-
-
-
-function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
   if (!zValues || zValues.length === 0) {
     console.warn("Aucune coordonnée Z fournie.");
     return;
@@ -235,6 +175,11 @@ function genererHistogrammeImage2(zValues, filename = 'histogramme_z') {
   link.click();
 }
 
+
+/**
+ * Génération du paramétrage normalisé de l'arbre
+ * @returns {json} Paramétrage normalisé de l'arbre
+ */
 function genererJSONNormalise() {
   return {
     "norm_level" : Math.random(),
@@ -274,7 +219,11 @@ function genererJSONNormalise() {
   };
 };
 
-
+/**
+ * V2 de generation JSON : Génération du paramétrage de l'arbre à partir d'un paramétrage normalisé ou non
+ * @param {json} JSON_normalise - Optionnel : Paramétrage normalisé de l'arbre
+ * @returns {{"modele" : json, "JSON_normalise": json}} Paramétrages de l'arbre
+ */
 function genererJSONFinal(JSON_normalise) {
   if (!JSON_normalise || Object.keys(JSON_normalise).length === 0) {
     JSON_normalise = genererJSONNormalise();
@@ -342,9 +291,11 @@ function genererJSONFinal(JSON_normalise) {
   return {"modele": modele, "JSON_normalise": JSON_normalise};
 };
 
-
-
-
+/**
+ * Génération du paramétrage de l'arbre à partir d'un paramétrage normalisé ou non
+ * @param {json} JSON_normalise - Optionnel : Paramétrage normalisé de l'arbre
+ * @returns {{"modele" : json, "JSON_normalise": json}} Paramétrages de l'arbre
+ */
 function generationJSON(JSON_normalise = {}) {
   if (JSON.stringify(JSON_normalise) === '{}') {
     JSON_normalise = {
@@ -528,6 +479,13 @@ function generationJSON(JSON_normalise = {}) {
 
 let l_hist = [];
 
+/**
+ * Génération d'un arbre, et appel de l'export des fichiers demandés
+ * @param {int} index - Numéro de l'arbre à générer
+ * @param {string} date - Date de la requête de génération
+ * @param {{"ply" : bool,"png" : bool,"JSON" : bool,"JSON_n" : bool}} param - Booléens des fichiers à générer en sortie
+ * @returns {int} Hauteur de l'arbre généré
+ */
 async function creationArbres (index, date, param) {
 // console.log('textures chargées');
   let resultat = generationJSON();
@@ -539,6 +497,11 @@ async function creationArbres (index, date, param) {
   return await exporterArbre(tree, index, arbre, arbre_normalise, date, param); 
 };
 
+
+/**
+ * Génération de nb arbres et d'un histogramme de hauteur lié à ces arbres
+ * @param {int} nb - Nombre d'arbres à générer pour l'histogramme
+ */
 export function creationHistogramme (nb) {
   let l_hist = [];
   for (let index = 0; index < nb; index++) {
@@ -552,11 +515,20 @@ export function creationHistogramme (nb) {
   
   console.log(nb);
   console.log(l_hist.length);
-  genererHistogrammeImage2(l_hist);
+  genererHistogrammeImage(l_hist);
 };
 
 
-
+/**
+ * Exportation des fichiers demandés lors de la requête de génération d'arbre
+ * @param {tree} arbre - Arbre généré
+ * @param {int} i - Numéro de l'arbre à exporter
+ * @param {json} json - Paramétrage de l'arbre
+ * @param {json} json_normalise - Paramétrage normalisé de l'arbre   
+ * @param {string} date - Date de la requête de génération
+ * @param {{"ply" : bool,"png" : bool,"JSON" : bool,"JSON_n" : bool}} param - Booléens des fichiers à générer en sortie
+ * @returns {int} Hauteur de l'arbre généré
+ */
 async function exporterArbre(arbre, i, json, json_normalise, date, param) {
 
   // Récupérer les coordonnées Z maximales
@@ -618,7 +590,7 @@ async function exporterArbre(arbre, i, json, json_normalise, date, param) {
   await exportPromiseJSON;
 
   // ############## JSON  Normalisé ###########
-  const exportPromiseJSOnorm = new Promise((resolve, reject) => {
+  const exportPromiseJSONnorm = new Promise((resolve, reject) => {
     if (param["JSON_n"]) {
         const blobJSON_norm = new Blob([JSON.stringify(json_normalise)], { type: 'text/plain' });
       const urlJSON_norm = window.URL.createObjectURL(blobJSON_norm);
@@ -635,17 +607,58 @@ async function exporterArbre(arbre, i, json, json_normalise, date, param) {
   await exportPromiseJSONnorm
 
   // ############## PNG ##############
-  if (param["png"]) {
-    renderer.render(scene, camera);
-    const linkPNG = document.getElementById('downloadLink');
-    linkPNG.href = renderer.domElement.toDataURL('image/png');
-    linkPNG.download = date + 'tree_' + i + '.png';
-    linkPNG.click();
-  };
+  const exportPromisePNG = new Promise((resolve, reject) => {
+    if (param["png"]) {
+      renderer.render(scene, camera);
+      const linkPNG = document.getElementById('downloadLink');
+      linkPNG.href = renderer.domElement.toDataURL('image/png');
+      linkPNG.download = date + 'tree_' + i + '.png';
+      linkPNG.click();
+      resolve();
+    } else {
+      resolve();
+    };
+  })
+  await exportPromisePNG
 
   return maxZ;
 };
 
+/**
+ * Génération d'un arbre, et appel de l'export des fichiers demandés
+ * @param {bool} json_ou_norm - Le json est il un json ou un json normalisé
+ * @param {input} json - Paramétrage de l'arbre
+ * @returns {int} Hauteur de l'arbre généré
+ */
+async function creationArbreJson(json_ou_norm, json) {
+  if (!json_ou_norm) {
+    json = generationJSON(json)["modele"];
+  }
+  json["leaves"] = {
+      "type": "ash",
+      "billboard": "double",
+      "angle": 55,
+      "count": 16,
+      "start": 0,
+      "size": 1,
+      "sizeVariance": 0.72,
+      "tint": 16777215,
+      "alphaTest": 0.5
+    };
+  tree.loadFromJson(json);
+  tree.generate();
+  scene.add(tree);
+  return await exporterArbre(tree, 0, json, {}, "", {
+        "ply" : true,
+        "png" : false,
+        "JSON" : false,
+        "JSON_n" : false
+      }); 
+};
+
+/**
+ * Génération d'arbres à partir de fichiers json
+ */
 function generationDossier() {
   const input = document.getElementById("folderInput");
   if (!input.files.length) {
@@ -705,12 +718,17 @@ let vue = Vue.createApp({
       JSON_file:false,
       JSON_norm:true,
       bloque : false,
-      index : 0
+      index : 0,
+      importation_json : true,
+      input_json : ""
     };
   },
   computed: {
   },
   methods: {
+    /**
+   * Génération de n arbres
+   */
     async lancerGeneration(){
       this.bloque = true;
       let param = {
@@ -740,6 +758,10 @@ let vue = Vue.createApp({
     },
     lancerExport(){
       generationDossier("D:/Tom/predictions/");
+    },
+    async lancerCreation(){
+      let input = JSON.parse(this.input_json);
+      await creationArbreJson(this.importation_json, input)
     }
   },
 }).mount('#app');
